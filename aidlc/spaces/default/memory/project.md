@@ -68,3 +68,4 @@
 
 <!-- Project-specific corrections from human feedback. -->
 <!-- Format: NEVER/ALWAYS [behavior] (learned [date]) -->
+- Use only uv, and a virtual environment, to install Python tools such as pytest. (learned 2026-11-14) <!-- cid:261114-temperature-converter:code-generation:815b0a8ea045c5cfa52b325db0aa0e97822596b78585fe44e2aa96230dadb303 -->

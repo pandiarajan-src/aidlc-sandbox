@@ -27,4 +27,6 @@ aidlc/diagnostics/
 .aidlc/base-source-listing.tsv
 .claude/settings.local.json
 # END AI-DLC:gitignore
-
+.venv/
+__pycache__/
+.pytest_cache/
