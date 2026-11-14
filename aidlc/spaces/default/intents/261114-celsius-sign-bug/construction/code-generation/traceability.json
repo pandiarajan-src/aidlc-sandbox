@@ -1,0 +1,21 @@
+{
+  "stage": "code-generation",
+  "upstream_ids": [
+    "FR1.1",
+    "FR1.2",
+    "FR2.1",
+    "FR2.2",
+    "FR2.3",
+    "NFR1",
+    "NFR2"
+  ],
+  "coverage": [
+    { "id": "FR1.1", "status": "OK", "target": "test_temp_convert.py" },
+    { "id": "FR1.2", "status": "OK", "target": "test_temp_convert.py" },
+    { "id": "FR2.1", "status": "OK", "target": "temp_convert.py" },
+    { "id": "FR2.2", "status": "OK", "target": "temp_convert.py" },
+    { "id": "FR2.3", "status": "OK", "target": "test_temp_convert.py" },
+    { "id": "NFR1", "status": "OK", "target": "temp_convert.py" },
+    { "id": "NFR2", "status": "OK", "target": "test_temp_convert.py" }
+  ]
+}

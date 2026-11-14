@@ -136,3 +136,58 @@ def test_help_text():
     assert "--c-to-f" in out and "--f-to-c" in out
     assert "interactive" in out.lower()
     assert "--c-to-f 100" in out and "--f-to-c 212" in out
+
+
+# --- negative values (celsius-sign-bug) ----------------------------------------
+
+@pytest.mark.parametrize(
+    "flag", ["--c-to-f", "--f-to-c"],
+)
+def test_minus_40_both_directions(flag):
+    assert run([flag, "-40"]) == (0, "-40.00\n", "")
+
+
+@pytest.mark.parametrize("argv", [["--c-to-f=-40"], ["--f-to-c=-40"]])
+def test_minus_40_equals_form(argv):
+    assert run(argv) == (0, "-40.00\n", "")
+
+
+@pytest.mark.parametrize(
+    "line,expected", [("-40 C", "-40.00 F"), ("-40C", "-40.00 F"), ("-40 F", "-40.00 C"), ("-40f", "-40.00 C")]
+)
+def test_minus_40_interactive(line, expected):
+    code, out, err = run([], line + "\nq\n")
+    assert code == 0 and err == ""
+    assert out == f"> {expected}\n> "
+
+
+def test_minus_40_functions():
+    assert format_result(c_to_f(-40)) == "-40.00"
+    assert format_result(f_to_c(-40)) == "-40.00"
+
+
+@pytest.mark.parametrize(
+    "argv,expected",
+    [(["--c-to-f", "-10"], "14.00"), (["--f-to-c", "-10"], "-23.33")],
+)
+def test_other_negative_values(argv, expected):
+    assert run(argv) == (0, expected + "\n", "")
+
+
+@pytest.mark.parametrize(
+    "argv,expected",
+    [(["--c-to-f", "-1e2"], "-148.00"), (["--c-to-f", "-.5"], "31.10")],
+)
+def test_negative_exponent_and_decimal_forms(argv, expected):
+    assert run(argv) == (0, expected + "\n", "")
+
+
+@pytest.mark.parametrize(
+    "argv",
+    [["--c-to-f", "-inf"], ["--f-to-c", "-nan"], ["--c-to-f", "-"], ["--c-to-f", "-1_0"], ["--c-to-f", "-abc"]],
+)
+def test_negative_non_finite_rejected(argv):
+    code, out, err = run(argv)
+    assert code == 1
+    assert out == ""
+    assert err.strip() != ""

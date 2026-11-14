@@ -112,6 +112,34 @@ def _build_parser(stdout, stderr):
     return parser
 
 
+def _join_negative_values(argv):
+    """Join ``--c-to-f``/``--f-to-c`` with a following negative-looking value.
+
+    argparse only treats some negative numbers (and differs by Python version)
+    as values, so ``--c-to-f -1e2`` can be refused as a missing argument. Joining
+    the two into ``--c-to-f=-1e2`` makes the value reach ``parse_finite`` in every
+    written form; bad text such as ``-inf`` is then rejected there as bad input.
+    """
+    joined = []
+    i = 0
+    while i < len(argv):
+        token = argv[i]
+        nxt = argv[i + 1] if i + 1 < len(argv) else None
+        if (
+            token in ("--c-to-f", "--f-to-c")
+            and nxt is not None
+            and nxt.startswith("-")
+            and not nxt.startswith("--")
+            and nxt != "-h"
+        ):
+            joined.append(f"{token}={nxt}")
+            i += 2
+        else:
+            joined.append(token)
+            i += 1
+    return joined
+
+
 def _interactive(stdin, stdout, stderr):
     while True:
         stdout.write("> ")
@@ -150,7 +178,7 @@ def main(argv=None, stdin=None, stdout=None, stderr=None):
 
     parser = _build_parser(stdout, stderr)
     try:
-        args = parser.parse_args(argv)
+        args = parser.parse_args(_join_negative_values(argv))
     except _UsageError as exc:
         stderr.write(f"temp_convert.py: error: {exc}\n")
         return 2

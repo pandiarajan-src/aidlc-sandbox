@@ -6,5 +6,13 @@
     "scope": "poc",
     "status": "complete",
     "request": "494a1256"
+  },
+  {
+    "uuid": "01a1da19-ac52-7670-9165-4d8f239f6ccc",
+    "slug": "celsius-sign-bug",
+    "dirName": "261114-celsius-sign-bug",
+    "scope": "bugfix",
+    "status": "complete",
+    "request": "55b84596"
   }
 ]
